@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin50">50dp</dimen>
+    <dimen name="margin100">100dp</dimen>
+    <dimen name="textsize40">40sp</dimen>
+    <dimen name="margin10">10dp</dimen>
+    <dimen name="margin150">150dp</dimen>
+    <dimen name="margin30">30dp</dimen>
+    <dimen name="margin20">20dp</dimen>
+    <dimen name="margin15">15dp</dimen>
+    <dimen name="margin5">5dp</dimen>
+    <dimen name="textsize15">15sp</dimen>
+</resources>
