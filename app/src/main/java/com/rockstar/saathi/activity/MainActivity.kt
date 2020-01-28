@@ -1,9 +1,10 @@
-package com.rockstar.saathi
+package com.rockstar.saathi.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import com.rockstar.saathi.R
 
 class MainActivity : AppCompatActivity() {
 

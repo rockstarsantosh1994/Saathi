@@ -10,4 +10,5 @@
     <dimen name="margin15">15dp</dimen>
     <dimen name="margin5">5dp</dimen>
     <dimen name="textsize15">15sp</dimen>
+    <dimen name="margin80">80dp</dimen>
 </resources>

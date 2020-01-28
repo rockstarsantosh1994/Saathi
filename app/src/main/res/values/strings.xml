@@ -5,4 +5,14 @@
     <string name="password">Password</string>
     <string name="dont_have_account">Don\'t have account?</string>
     <string name="sign_up">SignUp</string>
+    <string name="address">Address</string>
+    <string name="full_name">Full Name</string>
+    <string name="signup">Sign Up</string>
+    <string name="already_have_account">Already have account?</string>
+    <string name="log_in">Log In</string>
+    <string name="join_group">Join Group</string>
+    <string name="view_group">View Group</string>
+    <string name="near_me">Near Me</string>
+    <string name="emergency">Emergency</string>
+    <string name="logout">LogOut</string>
 </resources>

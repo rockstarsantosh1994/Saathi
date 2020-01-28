@@ -1,14 +1,15 @@
-package com.rockstar.saathi
+package com.rockstar.saathi.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
-import android.widget.Toast
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.rockstar.saathi.R
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -19,7 +20,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     @BindView(R.id.btn_submit)
     var btnSubmit:AppCompatButton?=null
     @BindView(R.id.tv_signup)
-    var tvSignUp:AppCompatButton?=null
+    var tvSignUp: TextView?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,9 +47,10 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.btn_submit->{
+            R.id.btn_submit ->{
                 if(isValidated()){
-                    val intent= Intent(applicationContext,DashBoardActivity::class.java)
+                    val intent= Intent(applicationContext,
+                        DashBoardActivity::class.java)
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
@@ -56,8 +58,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }
 
-            R.id.tv_signup->{
-                val intent= Intent(applicationContext,SignUpActivity::class.java)
+            R.id.tv_signup ->{
+                val intent= Intent(applicationContext,
+                    SignUpActivity::class.java)
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
