@@ -3,11 +3,20 @@ package com.rockstar.saathi.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
+import com.android.volley.AuthFailureError
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import com.google.gson.Gson
 import com.rockstar.saathi.R
+import com.rockstar.saathi.modal.CommonResponse
 
 class SignUpActivity : AppCompatActivity() , View.OnClickListener {
 
@@ -17,6 +26,7 @@ class SignUpActivity : AppCompatActivity() , View.OnClickListener {
     var etPassword:EditText?=null
     var btnSignUp:AppCompatButton?=null
     var tvLogin: TextView?=null
+    val TAG:String?="SignUpActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,10 +57,7 @@ class SignUpActivity : AppCompatActivity() , View.OnClickListener {
         when(v?.id){
             R.id.btn_signup ->{
                 if(isValidated()) {
-                    val intent = Intent(applicationContext, LoginActivity::class.java)
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
+                    signUpDetails()
                 }
             }
 
@@ -67,6 +74,53 @@ class SignUpActivity : AppCompatActivity() , View.OnClickListener {
         }
     }
 
+    private fun signUpDetails() {
+        val stringRequest: StringRequest = object : StringRequest(
+            Request.Method.POST, "https://ladiesapp.000webhostapp.com/satthi_app_api/user_signup.php", Response.Listener {
+                    response->
+                Log.e(TAG,"response $response")
+
+                val gson= Gson()
+
+                val commonResponse=gson.fromJson(response, CommonResponse::class.java)
+
+                if(commonResponse.Responsecode.equals("200")){
+                    val intent = Intent(applicationContext, LoginActivity::class.java)
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                    finish()
+
+                    Toast.makeText(this@SignUpActivity,""+commonResponse.Message,
+                        Toast.LENGTH_LONG).show()
+                }else{
+
+                    Toast.makeText(this@SignUpActivity," "+commonResponse.Message,
+                        Toast.LENGTH_LONG).show()
+
+                }
+
+            },
+            Response.ErrorListener {
+                Log.e(TAG,"error $it")
+            }) {
+            @Throws(AuthFailureError::class)
+            override fun getParams(): MutableMap<String, String> {
+                val params=HashMap<String,String>()
+                params.put("user_name",etUserName?.text.toString())
+                params.put("user_phoneno",etMobileNumber?.text.toString())
+                params.put("user_address",etAddress?.text.toString())
+                params.put("user_location",etAddress?.text.toString())
+                params.put("user_type","signup")
+                params.put("user_password",etPassword?.text.toString())
+
+                Log.e(TAG,"getParams $params")
+                return params
+            }
+        }
+        val mQueue = Volley.newRequestQueue(this)
+        mQueue.add(stringRequest)
+    }
     private fun isValidated():Boolean{
 
         var mobileno: String = etMobileNumber?.text.toString()

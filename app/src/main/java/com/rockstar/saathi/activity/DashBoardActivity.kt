@@ -21,8 +21,6 @@ class DashBoardActivity : AppCompatActivity(), View.OnClickListener {
 
         //Basic intialisation...
         initViews()
-
-
     }
 
     private fun initViews(){
@@ -50,19 +48,24 @@ class DashBoardActivity : AppCompatActivity(), View.OnClickListener {
         when(v?.id){
             R.id.ll_joingroup ->{
                 val intent: Intent = Intent(applicationContext,JoinGroupActivity::class.java)
+                intent.putExtra("type","JoinGroup")
                 startActivity(intent)
             }
 
             R.id.ll_view_group ->{
-
+                val intent: Intent = Intent(applicationContext,JoinGroupActivity::class.java)
+                intent.putExtra("type","ViewGroup")
+                startActivity(intent)
             }
 
             R.id.ll_near_me ->{
-
+                val intent: Intent = Intent(applicationContext,NearMeActivity::class.java)
+                startActivity(intent)
             }
 
             R.id.ll_emergency ->{
-
+                val intent: Intent = Intent(applicationContext,EmeregencyActivity::class.java)
+                startActivity(intent)
             }
 
             R.id.ll_logout ->{

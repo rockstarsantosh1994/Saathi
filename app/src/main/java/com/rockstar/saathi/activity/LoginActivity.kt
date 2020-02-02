@@ -3,13 +3,22 @@ package com.rockstar.saathi.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.android.volley.AuthFailureError
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import com.google.gson.Gson
 import com.rockstar.saathi.R
+import com.rockstar.saathi.modal.CommonResponse
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -21,6 +30,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     var btnSubmit:AppCompatButton?=null
     @BindView(R.id.tv_signup)
     var tvSignUp: TextView?=null
+    val TAG:String?="LoginActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,12 +59,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         when(v?.id){
             R.id.btn_submit ->{
                 if(isValidated()){
-                    val intent= Intent(applicationContext,
-                        DashBoardActivity::class.java)
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                    finish()
+                    userAuthentication()
                 }
             }
 
@@ -66,6 +71,51 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 startActivity(intent)
             }
         }
+    }
+
+    private fun userAuthentication() {
+        val stringRequest: StringRequest = object : StringRequest(
+            Request.Method.POST, "https://ladiesapp.000webhostapp.com/satthi_app_api/login.php", Response.Listener {
+                    response->
+                Log.e(TAG,"response $response")
+
+                val gson= Gson()
+
+                val commonResponse=gson.fromJson(response, CommonResponse::class.java)
+
+                if(commonResponse.Responsecode.equals("200")){
+                    val intent= Intent(applicationContext,
+                        DashBoardActivity::class.java)
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                    finish()
+
+                    Toast.makeText(this@LoginActivity,""+commonResponse.Message,
+                        Toast.LENGTH_LONG).show()
+                }else{
+
+                    Toast.makeText(this@LoginActivity," "+commonResponse.Message,
+                        Toast.LENGTH_LONG).show()
+
+                }
+
+            },
+            Response.ErrorListener {
+                Log.e(TAG,"error $it")
+            }) {
+            @Throws(AuthFailureError::class)
+            override fun getParams(): MutableMap<String, String> {
+                val params=HashMap<String,String>()
+                params.put("user_phoneno",etMobileNumber?.text.toString())
+                params.put("user_password",etPassword?.text.toString())
+
+                Log.e(TAG,"getParams $params")
+                return params
+            }
+        }
+        val mQueue = Volley.newRequestQueue(this)
+        mQueue.add(stringRequest)
     }
 
     private fun isValidated():Boolean{
@@ -97,6 +147,4 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         }
         return true
     }
-
-
 }

@@ -1,18 +1,20 @@
 package com.rockstar.saathi.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.rockstar.saathi.R
+import com.rockstar.saathi.activity.JoinDetailsActivity
 import com.rockstar.saathi.modal.JoinData
-import com.squareup.picasso.Picasso
-import de.hdodenhof.circleimageview.CircleImageView
 
-class JoinGroupAdapter(val context: Context,val joinTypeData:ArrayList<JoinData> ) : RecyclerView.Adapter<JoinGroupAdapter.JoinViewHolder>() {
-
+class JoinGroupAdapter(val context: Context,val joinTypeData:ArrayList<JoinData> ,var btnType:String) : RecyclerView.Adapter<JoinGroupAdapter.JoinViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JoinViewHolder {
         val inflater:LayoutInflater= LayoutInflater.from(parent.context)
@@ -30,12 +32,27 @@ class JoinGroupAdapter(val context: Context,val joinTypeData:ArrayList<JoinData>
         picasso.load(joinTypeData.get(position).ivImage)
             .into(holder.ivImage)*/
 
+        holder.ivImage?.let { Glide.with(context).load(joinTypeData.get(position).ivImage).into(it) };
+
         holder.tvType?.setText(joinTypeData.get(position).tvType)
+
+        if(btnType.equals("JoinGroup")){
+            holder.cardView?.setOnClickListener(View.OnClickListener {
+                var intent:Intent= Intent(context,JoinDetailsActivity::class.java)
+                intent.putExtra("type",joinTypeData.get(position).tvType)
+                context.startActivity(intent)
+            })
+        }
+
+
     }
 
-    public class JoinViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var ivImage:CircleImageView?=null
-        var tvType:TextView?=null
-    }
+    class JoinViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+        var ivImage:ImageView?=itemView.findViewById(R.id.profile_image)
+        var tvType:TextView?=itemView.findViewById(R.id.tv_name_type)
+        var cardView:CardView?=itemView.findViewById(R.id.cardview1)
+
+
+    }
 }

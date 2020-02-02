@@ -15,4 +15,14 @@
     <string name="near_me">Near Me</string>
     <string name="emergency">Emergency</string>
     <string name="logout">LogOut</string>
+    <string name="policeman">Policeman</string>
+    <string name="doctor">Doctor</string>
+    <string name="ambulance">Ambulance</string>
+    <string name="fire_extinguisher">Fire Extinguisher</string>
+    <string name="fill_up_form_to_register">Fill up form to register</string>
+    <string name="submit">Submit</string>
+    <string name="type">Type</string>
+    <string name="phone_no">Phone No</string>
+    <string name="call">Call</string>
+    <string name="message">Message</string>
 </resources>

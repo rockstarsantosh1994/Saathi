@@ -11,6 +11,8 @@ import com.rockstar.saathi.modal.JoinData
 class JoinGroupActivity : AppCompatActivity() {
 
     var rvJoinGroup:RecyclerView?=null
+    var TAG:String?="JoinGroupActivity"
+    var joinData:ArrayList<JoinData>?=ArrayList<JoinData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,15 +38,13 @@ class JoinGroupActivity : AppCompatActivity() {
     }
 
     private fun loadData(){
-        val joinData=ArrayList<JoinData>()
-        joinData.add(JoinData(R.drawable.ic_account,R.string.address))
-        joinData.add(JoinData(R.drawable.ic_account,R.string.address))
-        joinData.add(JoinData(R.drawable.ic_account,R.string.address))
-        joinData.add(JoinData(R.drawable.ic_account,R.string.address))
-        joinData.add(JoinData(R.drawable.ic_account,R.string.address))
-        joinData.add(JoinData(R.drawable.ic_account,R.string.address))
+        //joinData=ArrayList()
+        joinData!!.add(JoinData(R.drawable.ic_fire_extinguisher,"Fire"))
+        joinData!!.add(JoinData(R.drawable.ic_ambulance,"Ambulance"))
+        joinData!!.add(JoinData(R.drawable.ic_doctor,"Doctor"))
+        joinData!!.add(JoinData(R.drawable.ic_policeman,"Police"))
 
-        val joinGroupAdapter=JoinGroupAdapter(applicationContext,joinData)
-        rvJoinGroup?.adapter=joinGroupAdapter
+        var joinGroupAdapter = this?.let { JoinGroupAdapter(it, joinData!!,intent.getStringExtra("type")) }
+        rvJoinGroup!!.adapter=joinGroupAdapter
     }
 }
