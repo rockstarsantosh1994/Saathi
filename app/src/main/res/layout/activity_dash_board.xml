@@ -11,6 +11,17 @@
         layout="@layout/toolbar"
         android:id="@+id/toolbar"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_address"
+        android:text=""
+        android:gravity="center"
+        android:drawableLeft="@drawable/ic_pin"
+        android:drawablePadding="@dimen/margin5"
+        android:textSize="@dimen/textsize15"
+        android:textColor="@color/black"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -39,8 +39,8 @@ class JoinGroupActivity : AppCompatActivity() {
 
     private fun loadData(){
         //joinData=ArrayList()
-        joinData!!.add(JoinData(R.drawable.ic_fire_extinguisher,"Fire"))
-        joinData!!.add(JoinData(R.drawable.ic_ambulance,"Ambulance"))
+        joinData!!.add(JoinData(R.drawable.ic_fire_extinguisher,"Garage"))
+        joinData!!.add(JoinData(R.drawable.ic_ambulance,"Panic"))
         joinData!!.add(JoinData(R.drawable.ic_doctor,"Doctor"))
         joinData!!.add(JoinData(R.drawable.ic_policeman,"Police"))
 

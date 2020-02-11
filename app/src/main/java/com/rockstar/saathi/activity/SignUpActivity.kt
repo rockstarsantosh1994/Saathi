@@ -1,5 +1,6 @@
 package com.rockstar.saathi.activity
 
+import android.app.ProgressDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,6 +15,7 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.asmobisoft.digishare.CommonMethods
 import com.google.gson.Gson
 import com.rockstar.saathi.R
 import com.rockstar.saathi.modal.CommonResponse
@@ -57,7 +59,12 @@ class SignUpActivity : AppCompatActivity() , View.OnClickListener {
         when(v?.id){
             R.id.btn_signup ->{
                 if(isValidated()) {
-                    signUpDetails()
+                    if(CommonMethods.isNetworkAvailable(this)){
+                        signUpDetails()
+                    }else{
+                        Toast.makeText(applicationContext,"No Network available",Toast.LENGTH_SHORT).show()
+                    }
+
                 }
             }
 
@@ -75,6 +82,11 @@ class SignUpActivity : AppCompatActivity() , View.OnClickListener {
     }
 
     private fun signUpDetails() {
+        val progressDialog = ProgressDialog(this@SignUpActivity)
+        progressDialog.setMessage("Please wait...")
+        progressDialog.setTitle("Saathi")
+        progressDialog.show()
+        progressDialog.setCancelable(false)
         val stringRequest: StringRequest = object : StringRequest(
             Request.Method.POST, "https://ladiesapp.000webhostapp.com/satthi_app_api/user_signup.php", Response.Listener {
                     response->
@@ -85,6 +97,7 @@ class SignUpActivity : AppCompatActivity() , View.OnClickListener {
                 val commonResponse=gson.fromJson(response, CommonResponse::class.java)
 
                 if(commonResponse.Responsecode.equals("200")){
+                    progressDialog.dismiss()
                     val intent = Intent(applicationContext, LoginActivity::class.java)
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -94,7 +107,7 @@ class SignUpActivity : AppCompatActivity() , View.OnClickListener {
                     Toast.makeText(this@SignUpActivity,""+commonResponse.Message,
                         Toast.LENGTH_LONG).show()
                 }else{
-
+                    progressDialog.dismiss()
                     Toast.makeText(this@SignUpActivity," "+commonResponse.Message,
                         Toast.LENGTH_LONG).show()
 
@@ -103,6 +116,7 @@ class SignUpActivity : AppCompatActivity() , View.OnClickListener {
             },
             Response.ErrorListener {
                 Log.e(TAG,"error $it")
+                progressDialog.dismiss()
             }) {
             @Throws(AuthFailureError::class)
             override fun getParams(): MutableMap<String, String> {

@@ -1,5 +1,6 @@
 package com.rockstar.saathi.activity
 
+import android.app.ProgressDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -16,9 +17,11 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.asmobisoft.digishare.CommonMethods
 import com.google.gson.Gson
 import com.rockstar.saathi.R
 import com.rockstar.saathi.modal.CommonResponse
+import com.rockstar.saathi.modal.login.LoginResponse
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -59,7 +62,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         when(v?.id){
             R.id.btn_submit ->{
                 if(isValidated()){
-                    userAuthentication()
+                    if(CommonMethods.isNetworkAvailable(this)){
+                        userAuthentication()
+                    }else{
+                        Toast.makeText(applicationContext,"No Network available",Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
 
@@ -74,6 +81,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun userAuthentication() {
+        val progressDialog = ProgressDialog(this@LoginActivity)
+        progressDialog.setMessage("Please wait...")
+        progressDialog.setTitle("Saathi")
+        progressDialog.show()
+        progressDialog.setCancelable(false)
         val stringRequest: StringRequest = object : StringRequest(
             Request.Method.POST, "https://ladiesapp.000webhostapp.com/satthi_app_api/login.php", Response.Listener {
                     response->
@@ -81,9 +93,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
                 val gson= Gson()
 
-                val commonResponse=gson.fromJson(response, CommonResponse::class.java)
+                val loginResponse=gson.fromJson(response, LoginResponse::class.java)
 
-                if(commonResponse.Responsecode.equals("200")){
+                if(loginResponse.Responsecode.equals("200")){
+                    progressDialog.dismiss()
+                    CommonMethods.setPreference(applicationContext,CommonMethods.USER_ID,loginResponse.Data.user_id)
                     val intent= Intent(applicationContext,
                         DashBoardActivity::class.java)
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -91,11 +105,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                     startActivity(intent)
                     finish()
 
-                    Toast.makeText(this@LoginActivity,""+commonResponse.Message,
+                    Toast.makeText(this@LoginActivity,""+loginResponse.Message,
                         Toast.LENGTH_LONG).show()
                 }else{
-
-                    Toast.makeText(this@LoginActivity," "+commonResponse.Message,
+                    progressDialog.dismiss()
+                    Toast.makeText(this@LoginActivity," "+loginResponse.Message,
                         Toast.LENGTH_LONG).show()
 
                 }
@@ -103,6 +117,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             },
             Response.ErrorListener {
                 Log.e(TAG,"error $it")
+                progressDialog.dismiss()
             }) {
             @Throws(AuthFailureError::class)
             override fun getParams(): MutableMap<String, String> {
