@@ -13,6 +13,7 @@ class CommonMethods {
         val PREFS_NAME:String = "appname_prefs"
         val USER_ID:String="USER_ID"
         val CITY_NAME:String="CITY_NAME"
+        val GCM_TOKEN:String="GCM_TOKEN"
 
         fun emailValidator(email: String?): Boolean {
             val pattern: Pattern

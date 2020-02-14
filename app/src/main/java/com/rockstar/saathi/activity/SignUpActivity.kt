@@ -16,9 +16,11 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.asmobisoft.digishare.CommonMethods
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.gson.Gson
 import com.rockstar.saathi.R
 import com.rockstar.saathi.modal.CommonResponse
+import java.io.IOException
 
 class SignUpActivity : AppCompatActivity() , View.OnClickListener {
 
@@ -29,10 +31,22 @@ class SignUpActivity : AppCompatActivity() , View.OnClickListener {
     var btnSignUp:AppCompatButton?=null
     var tvLogin: TextView?=null
     val TAG:String?="SignUpActivity"
+    var gcmToken:String?=""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
+
+        Thread(Runnable {
+            try {
+                /*CommonMethods.setPreference(applicationContext,AllKeys.FCM_TOKEN,
+                    FirebaseInstanceId.getInstance().getToken(getString(R.string.SENDER_ID), "FCM"))
+               */ Log.e("firebaseid", FirebaseInstanceId.getInstance().getToken(getString(R.string.SENDER_ID), "FCM"))
+                gcmToken=FirebaseInstanceId.getInstance().getToken(getString(R.string.SENDER_ID), "FCM")
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }).start()
 
         //Basic intialisation....
         initViews()
@@ -127,6 +141,7 @@ class SignUpActivity : AppCompatActivity() , View.OnClickListener {
                 params.put("user_location",etAddress?.text.toString())
                 params.put("user_type","signup")
                 params.put("user_password",etPassword?.text.toString())
+                params.put("gcm_token",gcmToken.toString())
 
                 Log.e(TAG,"getParams $params")
                 return params

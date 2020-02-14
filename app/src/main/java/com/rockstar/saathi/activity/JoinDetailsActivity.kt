@@ -98,8 +98,9 @@ class JoinDetailsActivity : AppCompatActivity(), View.OnClickListener {
                     params.put("user_location",CommonMethods.getPrefrence(applicationContext,CommonMethods.CITY_NAME).toString())
                     params.put("user_type",intent.getStringExtra("type"))
                     params.put("user_password","")
+                    params.put("gcm_token",CommonMethods.getPrefrence(this@JoinDetailsActivity,CommonMethods.GCM_TOKEN).toString())
 
-                    Log.e(TAG,"getParams $params")
+                Log.e(TAG,"getParams $params")
                 return params
             }
         }

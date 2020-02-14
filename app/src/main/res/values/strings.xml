@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">Saathi</string>
+
+    <string name="SENDER_ID">800482301040</string>
+
+    <string name="notifications_admin_channel_name">chat</string>
+    <string name="notifications_admin_channel_description"> Firebase PushNotification</string>
+
     <string name="sign_in">Sign In</string>
     <string name="mobile_number">Mobile Number</string>
     <string name="password">Password</string>

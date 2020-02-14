@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "800482301040",
+    "firebase_url": "https://saathi-41e3c.firebaseio.com",
+    "project_id": "saathi-41e3c",
+    "storage_bucket": "saathi-41e3c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:800482301040:android:53a184c58ba858da3a10b5",
+        "android_client_info": {
+          "package_name": "com.rockstar.saathi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "800482301040-cpt15edotuafdchrel7vr4tofkcr54ga.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rockstar.saathi",
+            "certificate_hash": "28275603dc5fbc9b601dba645108a4d58a8136e2"
+          }
+        },
+        {
+          "client_id": "800482301040-1vihig4ncic9lbldibmm1o3hf6atjrl5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFrGWZy_o4WGg24fnTVBm-KXxH2eAsPkI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "800482301040-1vihig4ncic9lbldibmm1o3hf6atjrl5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
