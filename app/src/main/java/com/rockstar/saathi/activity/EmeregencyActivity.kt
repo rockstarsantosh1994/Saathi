@@ -36,7 +36,7 @@ class EmeregencyActivity : AppCompatActivity() {
             Toast.makeText(applicationContext,"No Network available", Toast.LENGTH_SHORT).show()
         }
     }
-
+    
     private fun initViews(){
         //toolbar intialisation....
         var toolbar= this.findViewById(R.id.toolbar_emergency) as androidx.appcompat.widget.Toolbar
@@ -62,8 +62,10 @@ class EmeregencyActivity : AppCompatActivity() {
                 val userDataResponse=gson.fromJson(response, UserResponse::class.java)
                 if(userDataResponse.Responsecode.equals("200")){
                     progressDialog.dismiss()
-                    val emergencyAdapter= EmergencyAdapter(applicationContext,userDataResponse.Data)
-                    rvEmergency?.adapter=emergencyAdapter
+                    if(userDataResponse.Data!=null){
+                        val emergencyAdapter= EmergencyAdapter(applicationContext,userDataResponse.Data)
+                        rvEmergency?.adapter=emergencyAdapter
+                    }
                 }else{
                     progressDialog.dismiss()
                 }

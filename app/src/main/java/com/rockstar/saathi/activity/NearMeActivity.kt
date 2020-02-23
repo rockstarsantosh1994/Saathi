@@ -67,8 +67,10 @@ class NearMeActivity : AppCompatActivity() {
             val userDataResponse=gson.fromJson(response,UserResponse::class.java)
             if(userDataResponse.Responsecode.equals("200")){
                 progressDialog.dismiss()
-                val nearMeAdapter=NearMeAdapter(applicationContext,userDataResponse.Data)
-                rvNearMe?.adapter=nearMeAdapter
+                if(userDataResponse.Data!=null){
+                    val nearMeAdapter=NearMeAdapter(applicationContext,userDataResponse.Data)
+                    rvNearMe?.adapter=nearMeAdapter
+                }
             }else{
                 progressDialog.dismiss()
             }
