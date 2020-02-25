@@ -33,11 +33,20 @@ class NearMeActivity : AppCompatActivity() {
         initViews()
 
         //load Data to recycler view...
-        if(CommonMethods.isNetworkAvailable(this)){
-            loadData()
-        }else{
-            Toast.makeText(applicationContext,"No Network available",Toast.LENGTH_SHORT).show()
+        if(intent.getStringExtra("type").equals("ViewGroup")){
+            if(CommonMethods.isNetworkAvailable(this)){
+                loadParticularUserTypeData()
+            }else{
+                Toast.makeText(applicationContext,"No Network available",Toast.LENGTH_SHORT).show()
+            }
+        }else if(intent.getStringExtra("type").equals("NearMe")){
+            if(CommonMethods.isNetworkAvailable(this)){
+                loadData()
+            }else{
+                Toast.makeText(applicationContext,"No Network available",Toast.LENGTH_SHORT).show()
+            }
         }
+
 
     }
 
@@ -60,7 +69,7 @@ class NearMeActivity : AppCompatActivity() {
         progressDialog.show()
         progressDialog.setCancelable(false)
         val stringRequest:StringRequest= object:StringRequest(Request.Method.POST,"https://ladiesapp.000webhostapp.com/satthi_app_api/getallusers.php",Response.Listener {
-            response->
+                response->
 
             val gson: Gson = Gson()
 
@@ -87,4 +96,42 @@ class NearMeActivity : AppCompatActivity() {
         val mQueue=Volley.newRequestQueue(this)
         mQueue.add(stringRequest)
     }
+
+    private fun loadParticularUserTypeData(){
+        val progressDialog = ProgressDialog(this@NearMeActivity)
+        progressDialog.setMessage("Please wait...")
+        progressDialog.setTitle("Saathi")
+        progressDialog.show()
+        progressDialog.setCancelable(false)
+        val stringRequest:StringRequest= object:StringRequest(Request.Method.POST,"https://ladiesapp.000webhostapp.com/satthi_app_api/getusertype.php",Response.Listener {
+            response->
+
+            val gson: Gson = Gson()
+
+            val userDataResponse=gson.fromJson(response,UserResponse::class.java)
+            if(userDataResponse.Responsecode.equals("200")){
+                progressDialog.dismiss()
+                if(userDataResponse.Data!=null){
+                    val nearMeAdapter=NearMeAdapter(applicationContext,userDataResponse.Data)
+                    rvNearMe?.adapter=nearMeAdapter
+                }
+            }else{
+                progressDialog.dismiss()
+            }
+        },Response.ErrorListener {
+            progressDialog.dismiss()
+            Log.e(TAG,"error Listener $it")
+        }){
+            override fun getParams(): MutableMap<String, String> {
+                val params=HashMap<String,String>()
+                params.put("user_location",CommonMethods.getPrefrence(applicationContext,CommonMethods.CITY_NAME).toString())
+                params.put("user_type",intent.getStringExtra("user_type"))
+                return params;
+            }
+        }
+        val mQueue=Volley.newRequestQueue(this)
+        mQueue.add(stringRequest)
+    }
+
+
 }

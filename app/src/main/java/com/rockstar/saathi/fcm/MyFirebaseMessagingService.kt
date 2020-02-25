@@ -3,6 +3,7 @@ package com.rockstar.saathi.fcm
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.ComponentName
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
@@ -13,10 +14,12 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import com.asmobisoft.digishare.CommonMethods
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.rockstar.saathi.R
 import com.rockstar.saathi.activity.DashBoardActivity
+
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
@@ -106,10 +109,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         intent.putExtra("notification","Notification")
         intent.putExtra("key", messageBody)
 
+
         val pendingIntent = PendingIntent.getActivity(
             this, 0, intent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
+        /* intent = PendingIntent.getActivity(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?f=d&daddr="+ CommonMethods.getPrefrence(applicationContext,CommonMethods.LAT)+","+CommonMethods.getPrefrence(applicationContext,CommonMethods.LONG)))
+        intent.component = ComponentName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity")
+        startActivity(intent)*/
         builder.setContentIntent(pendingIntent)
 
         // Add as notification

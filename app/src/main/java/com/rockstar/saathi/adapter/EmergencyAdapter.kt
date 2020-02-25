@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.asmobisoft.digishare.CommonMethods
 import com.rockstar.saathi.R
 import com.rockstar.saathi.modal.userdata.UserData
 import org.json.JSONObject
@@ -50,7 +51,7 @@ class EmergencyAdapter (val context: Context, val userDataArrayList:ArrayList<Us
 
         holder.llMessage.setOnClickListener(View.OnClickListener {
 
-            var message="Hello, i am "+userDataArrayList.get(position).user_name+" in emergency please help me"
+            var message="My Location is http://maps.google.com/maps?f=d&daddr="+CommonMethods.getPrefrence(context,CommonMethods.LAT)+","+CommonMethods.getPrefrence(context,CommonMethods.LONG)
 
             sendNotification(message,userDataArrayList.get(position).gcm_token)
             /*val uri = Uri.parse("smsto:"+userDataArrayList.get(position).user_phoneno)

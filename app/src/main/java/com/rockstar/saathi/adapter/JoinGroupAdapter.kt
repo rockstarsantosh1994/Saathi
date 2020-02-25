@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.rockstar.saathi.R
 import com.rockstar.saathi.activity.JoinDetailsActivity
+import com.rockstar.saathi.activity.NearMeActivity
 import com.rockstar.saathi.modal.JoinData
 
 class JoinGroupAdapter(val context: Context,val joinTypeData:ArrayList<JoinData> ,var btnType:String) : RecyclerView.Adapter<JoinGroupAdapter.JoinViewHolder>() {
@@ -36,13 +37,18 @@ class JoinGroupAdapter(val context: Context,val joinTypeData:ArrayList<JoinData>
 
         holder.tvType?.setText(joinTypeData.get(position).tvType)
 
-        if(btnType.equals("JoinGroup")){
-            holder.cardView?.setOnClickListener(View.OnClickListener {
+        holder.cardView?.setOnClickListener(View.OnClickListener {
+            if(btnType.equals("JoinGroup")){
                 var intent:Intent= Intent(context,JoinDetailsActivity::class.java)
                 intent.putExtra("type",joinTypeData.get(position).tvType)
                 context.startActivity(intent)
-            })
-        }
+            }else if(btnType.equals("ViewGroup")){
+                val intent: Intent = Intent(context, NearMeActivity::class.java)
+                intent.putExtra("type","ViewGroup")
+                intent.putExtra("user_type",joinTypeData.get(position).tvType)
+                context.startActivity(intent)
+            }
+        })
 
 
     }

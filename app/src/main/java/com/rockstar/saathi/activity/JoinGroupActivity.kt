@@ -29,7 +29,12 @@ class JoinGroupActivity : AppCompatActivity() {
         //toolbar intialisation....
         var toolbar= this.findViewById(R.id.toolbar_joingroup) as androidx.appcompat.widget.Toolbar
         setSupportActionBar(toolbar)
-        supportActionBar?.title ="Join Group"
+        if(intent.getStringExtra("type").equals("JoinGroup")){
+            supportActionBar?.title ="Join Group"
+        }else if(intent.getStringExtra("type").equals("ViewGroup")){
+            supportActionBar?.title ="View Group"
+        }
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         //Recycler view.

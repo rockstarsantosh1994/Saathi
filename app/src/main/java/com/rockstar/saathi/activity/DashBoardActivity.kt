@@ -92,6 +92,7 @@ class DashBoardActivity : AppCompatActivity(), View.OnClickListener {
 
             R.id.ll_near_me ->{
                 val intent: Intent = Intent(applicationContext,NearMeActivity::class.java)
+                intent.putExtra("type","NearMe")
                 startActivity(intent)
             }
 
@@ -247,6 +248,8 @@ class DashBoardActivity : AppCompatActivity(), View.OnClickListener {
         supportActionBar?.title ="DashBoard ($city)"
         tvAddress?.setText(address)
         CommonMethods.setPreference(applicationContext,CommonMethods.CITY_NAME,city)
+        CommonMethods.setPreference(applicationContext,CommonMethods.LAT,latitude)
+        CommonMethods.setPreference(applicationContext,CommonMethods.LONG,longitude)
 
         Log.e(TAG,"address name $address")
         Log.e(TAG,"city name $city")

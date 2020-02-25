@@ -36,7 +36,7 @@ class EmeregencyActivity : AppCompatActivity() {
             Toast.makeText(applicationContext,"No Network available", Toast.LENGTH_SHORT).show()
         }
     }
-    
+
     private fun initViews(){
         //toolbar intialisation....
         var toolbar= this.findViewById(R.id.toolbar_emergency) as androidx.appcompat.widget.Toolbar
