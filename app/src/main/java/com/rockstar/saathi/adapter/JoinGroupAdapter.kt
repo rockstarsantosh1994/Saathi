@@ -33,11 +33,14 @@ class JoinGroupAdapter(val context: Context,val joinTypeData:ArrayList<JoinData>
         picasso.load(joinTypeData.get(position).ivImage)
             .into(holder.ivImage)*/
 
-        holder.ivImage?.let { Glide.with(context).load(joinTypeData.get(position).ivImage).into(it) };
+        holder.ivImage?.let {
+            Glide.with(context).load(joinTypeData.get(position).ivImage).into(it)
+        };
 
         holder.tvType?.setText(joinTypeData.get(position).tvType)
 
         holder.cardView?.setOnClickListener(View.OnClickListener {
+
             if(btnType.equals("JoinGroup")){
                 var intent:Intent= Intent(context,JoinDetailsActivity::class.java)
                 intent.putExtra("type",joinTypeData.get(position).tvType)
@@ -49,8 +52,6 @@ class JoinGroupAdapter(val context: Context,val joinTypeData:ArrayList<JoinData>
                 context.startActivity(intent)
             }
         })
-
-
     }
 
     class JoinViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -58,7 +59,5 @@ class JoinGroupAdapter(val context: Context,val joinTypeData:ArrayList<JoinData>
         var ivImage:ImageView?=itemView.findViewById(R.id.profile_image)
         var tvType:TextView?=itemView.findViewById(R.id.tv_name_type)
         var cardView:CardView?=itemView.findViewById(R.id.cardview1)
-
-
     }
 }

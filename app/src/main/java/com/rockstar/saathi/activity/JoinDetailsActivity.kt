@@ -1,9 +1,15 @@
 package com.rockstar.saathi.activity
 
+import android.Manifest
+import android.app.Activity
 import android.app.ProgressDialog
+import android.content.ContentResolver
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.util.Log
 import android.view.View
 import android.widget.EditText
@@ -25,7 +31,13 @@ class JoinDetailsActivity : AppCompatActivity(), View.OnClickListener {
     var etMobileNumber: EditText? = null
     var etAddress: EditText? = null
     var btnSubmit: AppCompatButton? = null
+    var btnGetContacts: AppCompatButton? = null
     val TAG:String?="JoinDetailsActivity"
+
+    companion object {
+        val PERMISSIONS_REQUEST_READ_CONTACTS = 100
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +52,9 @@ class JoinDetailsActivity : AppCompatActivity(), View.OnClickListener {
         etMobileNumber = findViewById(R.id.et_mobilenumber)
         etAddress = findViewById(R.id.et_address)
         btnSubmit = findViewById(R.id.btn_submit)
+        btnGetContacts = findViewById(R.id.btn_getcontact)
         btnSubmit?.setOnClickListener(this)
+        btnGetContacts?.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -54,6 +68,84 @@ class JoinDetailsActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }
             }
+
+            R.id.btn_getcontact ->{
+               // loadContacts()
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(
+                        Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS),
+                        PERMISSIONS_REQUEST_READ_CONTACTS)
+                    //callback onRequestPermissionsResult
+                } else {
+                    val intent = Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)
+                    startActivityForResult(intent, 1)
+                }
+
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                val intent = Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)
+                startActivityForResult(intent, 1)
+
+            } else {
+                //  toast("Permission must be granted in order to display contacts information")
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK) {
+            val contactData = data!!.data
+            val c = contentResolver.query(contactData!!, null, null, null, null)
+            if (c!!.moveToFirst()) {
+
+                var phoneNumber = ""
+                var emailAddress = ""
+                val name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+                val contactId = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID))
+                //http://stackoverflow.com/questions/866769/how-to-call-android-contacts-list   our upvoted answer
+
+                var hasPhone = c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))
+
+                if (hasPhone.equals("1", ignoreCase = true))
+                    hasPhone = "true"
+                else
+                    hasPhone = "false"
+
+                if (java.lang.Boolean.parseBoolean(hasPhone)) {
+                    val phones = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null)
+                    while (phones!!.moveToNext()) {
+                        phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                    }
+                    phones.close()
+                }
+
+                // Find Email Addresses
+                val emails = contentResolver.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = " + contactId, null, null)
+                while (emails!!.moveToNext()) {
+                    emailAddress = emails.getString(emails.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA))
+                }
+                emails.close()
+
+                //mainActivity.onBackPressed();
+                // Toast.makeText(mainactivity, "go go go", Toast.LENGTH_SHORT).show();
+
+                //etUserName!!.text = name.toString()
+               // Toast.makeText(applicationContext,"name"+name.toString()+"\n phoneumber"+phoneNumber.toString(),Toast.LENGTH_SHORT).show()
+
+                etUserName!!.setText(name.toString())
+                //etMobileNumber!!.text = "Phone: " + phoneNumber
+                etMobileNumber!!.setText(phoneNumber.toString())
+                //tvmail!!.text = "Email: " + emailAddress
+                Log.e("curs", "$name num$phoneNumber mail$emailAddress")
+            }
+            c.close()
         }
     }
 
@@ -108,6 +200,75 @@ class JoinDetailsActivity : AppCompatActivity(), View.OnClickListener {
         mQueue.add(stringRequest)
     }
 
+    /*private fun loadContacts() {
+        var builder = StringBuilder()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(
+                Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS),
+                PERMISSIONS_REQUEST_READ_CONTACTS)
+            //callback onRequestPermissionsResult
+        } else {
+            builder = getContacts()
+
+            //etMobileNumber?.text = builder.toString()
+            etMobileNumber?.setText(builder.toString())
+            Log.e(TAG,"builder String"+ builder.toString())
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                loadContacts()
+            } else {
+                //  toast("Permission must be granted in order to display contacts information")
+            }
+        }
+    }
+
+    private fun getContacts(): StringBuilder {
+        val builder = StringBuilder()
+        val resolver: ContentResolver = contentResolver;
+        val cursor = resolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null,
+            null)
+
+        if (cursor != null) {
+            if (cursor.count > 0) {
+                while (cursor.moveToNext()) {
+                    val id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID))
+                    val name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+                    val phoneNumber = (cursor.getString(
+                        cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))).toInt()
+
+                    if (phoneNumber > 0) {
+                        val cursorPhone = contentResolver.query(
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=?", arrayOf(id), null)
+
+                        if (cursorPhone != null) {
+                            if(cursorPhone.count > 0) {
+                                while (cursorPhone.moveToNext()) {
+                                    val phoneNumValue = cursorPhone.getString(
+                                        cursorPhone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                                    builder.append("Contact: ").append(name).append(", Phone Number: ").append(
+                                        phoneNumValue).append("\n\n")
+                                    Log.e("Name ===>",phoneNumValue);
+                                }
+                            }
+                        }
+                        cursorPhone!!.close()
+                    }
+                }
+            } else {
+                //   toast("No contacts available!")
+            }
+        }
+        cursor!!.close()
+        return builder
+    }
+*/
     private fun isValidated(): Boolean {
         var mobileno: String = etMobileNumber?.text.toString()
         if (etUserName?.text.toString().isEmpty()) {
