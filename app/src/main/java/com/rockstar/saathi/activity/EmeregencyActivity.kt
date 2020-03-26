@@ -1,10 +1,16 @@
 package com.rockstar.saathi.activity
 
+import android.Manifest
+import android.app.Activity
 import android.app.ProgressDialog
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
@@ -13,9 +19,11 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.asmobisoft.digishare.CommonMethods
 import com.google.gson.Gson
+import com.google.gson.JsonDeserializationContext
 import com.rockstar.saathi.R
 import com.rockstar.saathi.adapter.EmergencyAdapter
 import com.rockstar.saathi.modal.userdata.UserResponse
+
 
 class EmeregencyActivity : AppCompatActivity() {
 
@@ -25,7 +33,6 @@ class EmeregencyActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_emeregency)
-
         //Basic intialisation...
         initViews()
 
@@ -46,7 +53,10 @@ class EmeregencyActivity : AppCompatActivity() {
 
         //Recycler view.
         rvEmergency=findViewById(R.id.rvEmergency)
-        rvEmergency?.layoutManager= LinearLayoutManager(this)
+        val linearLayoutManager = LinearLayoutManager(this)
+        linearLayoutManager.reverseLayout = true
+        linearLayoutManager.stackFromEnd = true
+        rvEmergency?.setLayoutManager(linearLayoutManager)
     }
 
     private fun loadData(){

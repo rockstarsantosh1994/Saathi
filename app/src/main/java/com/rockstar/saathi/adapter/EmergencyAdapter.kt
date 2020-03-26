@@ -1,5 +1,6 @@
 package com.rockstar.saathi.adapter
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -16,11 +17,12 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.asmobisoft.digishare.CommonMethods
 import com.rockstar.saathi.R
+import com.rockstar.saathi.activity.EmeregencyActivity
 import com.rockstar.saathi.modal.userdata.UserData
 import org.json.JSONObject
 
 
-class EmergencyAdapter (val context: Context, val userDataArrayList:ArrayList<UserData>): RecyclerView.Adapter<EmergencyAdapter.EmergecnyViewHolder>() {
+class EmergencyAdapter (var context: Context, val userDataArrayList:ArrayList<UserData>): RecyclerView.Adapter<EmergencyAdapter.EmergecnyViewHolder>() {
 
     private val URL = "https://fcm.googleapis.com/fcm/send"
     private var mRequestQue: RequestQueue?=null
@@ -54,14 +56,16 @@ class EmergencyAdapter (val context: Context, val userDataArrayList:ArrayList<Us
             var message="My Location is http://maps.google.com/maps?f=d&daddr="+CommonMethods.getPrefrence(context,CommonMethods.LAT)+","+CommonMethods.getPrefrence(context,CommonMethods.LONG)
 
             sendNotification(message,userDataArrayList.get(position).gcm_token)
-            /*val uri = Uri.parse("smsto:"+userDataArrayList.get(position).user_phoneno)
+
+            val uri = Uri.parse("smsto:"+userDataArrayList.get(position).user_phoneno)
             val intent = Intent(Intent.ACTION_SENDTO, uri)
-            intent.putExtra("sms_body", "I am in emergency please help me ")
-            context.startActivity(intent)*/
+            intent.putExtra("sms_body", message)
+            context.startActivity(intent)
         })
     }
 
     class EmergecnyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
         val tvName: TextView =itemView.findViewById(R.id.tv_name)
         val tvPhoneNumber: TextView =itemView.findViewById(R.id.tv_phonenumber)
         val tvAddress: TextView =itemView.findViewById(R.id.tv_address)
@@ -70,7 +74,6 @@ class EmergencyAdapter (val context: Context, val userDataArrayList:ArrayList<Us
         val llMessage: LinearLayout =itemView.findViewById(R.id.ll_message)
     }
 
-
         fun sendNotification( message:String,gcm_token:String){
 
             Log.e(TAG,"insendnotification")
@@ -78,7 +81,7 @@ class EmergencyAdapter (val context: Context, val userDataArrayList:ArrayList<Us
 
             val notification= JSONObject()
             try{
-                notificationData.put("title","DigiShare")
+                notificationData.put("title","Saathi")
                 notificationData.put("message",message)
 
 
