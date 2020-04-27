@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
         //Initialize the Handler
         mDelayHandler = Handler()
-        val mRunnable: Runnable = Runnable {
+        val mRunnable = Runnable {
 
              //Log.e("firebase_id", FirebaseInstanceId.getInstance().getToken(getString(R.string.SENDER_ID), "FCM"))
              //Firebase token generation

@@ -1,6 +1,5 @@
 package com.rockstar.saathi.adapter
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -10,17 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.asmobisoft.digishare.CommonMethods
 import com.rockstar.saathi.R
-import com.rockstar.saathi.activity.EmeregencyActivity
 import com.rockstar.saathi.modal.userdata.UserData
 import org.json.JSONObject
-
 
 class EmergencyAdapter (var context: Context, val userDataArrayList:ArrayList<UserData>): RecyclerView.Adapter<EmergencyAdapter.EmergecnyViewHolder>() {
 
@@ -47,6 +43,7 @@ class EmergencyAdapter (var context: Context, val userDataArrayList:ArrayList<Us
 
         holder.llCall.setOnClickListener(View.OnClickListener {
             var intent = Intent(Intent.ACTION_DIAL);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             intent.data = Uri.parse("tel:"+userDataArrayList.get(position).user_phoneno)
             context.startActivity(intent)
         })
@@ -59,6 +56,7 @@ class EmergencyAdapter (var context: Context, val userDataArrayList:ArrayList<Us
 
             val uri = Uri.parse("smsto:"+userDataArrayList.get(position).user_phoneno)
             val intent = Intent(Intent.ACTION_SENDTO, uri)
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             intent.putExtra("sms_body", message)
             context.startActivity(intent)
         })
@@ -83,8 +81,6 @@ class EmergencyAdapter (var context: Context, val userDataArrayList:ArrayList<Us
             try{
                 notificationData.put("title","Saathi")
                 notificationData.put("message",message)
-
-
                 //notification.put("to","fXEZoWEeBNQ:APA91bFfNgb3mh8iQ70ePYyIhFfKpEW-QG10K4aaexZS_0bCzu_2Y9W50f3h2LfKz0C_kVSFt2hwQ_GioizXT2ZF43C9JnAXnKk_53_nDp_AKmSXtk4P-5mC-KdkBBHOVYxfAMU9vBa4")
                 //notification.put("to",CommonMethods.getPrefrence(applicationContext,AllKeys.FCM_TOKEN))
                 notification.put("to",gcm_token)
@@ -122,5 +118,4 @@ class EmergencyAdapter (var context: Context, val userDataArrayList:ArrayList<Us
                 e.printStackTrace()
             }
         }
-
 }

@@ -3,7 +3,6 @@ package com.rockstar.saathi.fcm
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.ComponentName
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
@@ -14,7 +13,6 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import com.asmobisoft.digishare.CommonMethods
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.rockstar.saathi.R
@@ -98,12 +96,17 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }*/
 
     fun sendNotification(messageBody: String){
+        val bigTextStyle = NotificationCompat.BigTextStyle()
+        bigTextStyle.setBigContentTitle("Saathi")
+        bigTextStyle.bigText(messageBody)
+
         val builder = NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher) //set icon for notification
                 .setContentTitle("Saathi") //set title of notification
                 .setContentText(messageBody) //this is notification message
                 .setAutoCancel(true) // makes auto cancel of notification
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT) //set priority of notification
+                .setStyle(bigTextStyle)
 
         val intent = Intent(this, DashBoardActivity::class.java)
         intent.putExtra("notification","Notification")
@@ -145,5 +148,22 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         adminChannel.enableVibration(true)
         adminChannel.setSound(sound, attributes);
         notificationManager.createNotificationChannel(adminChannel)
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private fun setupChannels(notificationManager: NotificationManager?) {
+        val adminChannelName: CharSequence = "New notification"
+        val adminChannelDescription = "Device to devie notification"
+        val adminChannel: NotificationChannel
+        adminChannel = NotificationChannel(
+            ADMIN_CHANNEL_ID,
+            adminChannelName,
+            NotificationManager.IMPORTANCE_HIGH
+        )
+        adminChannel.description = adminChannelDescription
+        adminChannel.enableLights(true)
+        adminChannel.lightColor = Color.RED
+        adminChannel.enableVibration(true)
+        notificationManager?.createNotificationChannel(adminChannel)
     }
 }

@@ -9,7 +9,6 @@ import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
@@ -19,9 +18,15 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.asmobisoft.digishare.CommonMethods
 import com.google.android.gms.location.*
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.rockstar.saathi.R
 import java.io.IOException
 import java.lang.reflect.InvocationTargetException
@@ -46,6 +51,9 @@ class DashBoardActivity : AppCompatActivity(), View.OnClickListener {
 
         //Basic intialisation...
         initViews()
+
+        //request permissions
+        requestPermissionss()
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
@@ -255,4 +263,23 @@ class DashBoardActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    private fun requestPermissionss(){
+        Dexter.withActivity(this)
+            .withPermissions(
+                Manifest.permission.CALL_PHONE,
+                Manifest.permission.SEND_SMS,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ).withListener(object : MultiplePermissionsListener {
+                override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permissions: List<PermissionRequest?>?,
+                    token: PermissionToken?
+                ) { /* ... */
+                }
+            }).check()
+    }
 }
